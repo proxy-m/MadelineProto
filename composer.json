@@ -23,7 +23,7 @@
         "ext-pthreads": "*"
     },
     "require": {
-        "php-64bit": ">=8.0",
+        "php": ">=7.4",
         "danog/primemodule": "^1",
         "erusev/parsedown": "^1.7",
         "symfony/polyfill-mbstring": "*",
@@ -126,6 +126,12 @@
     "extra": {
         "phabel": {
             "revision": 0
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "phabel/phabel": true,
+            "bamarni/composer-bin-plugin": true
         }
     }
 }
