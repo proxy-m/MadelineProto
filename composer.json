@@ -98,10 +98,10 @@
     },
     "scripts": {
         "build": [
-            "@docs",
+            
             "@phpdoc",
-            "@cs-fix",
-            "@psalm"
+            "@cs-fix"
+            
         ],
         "phpdoc": [
             "@phpdocInternal",
