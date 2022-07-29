@@ -1,5 +1,11 @@
 <?php
-require_once 'madeline.php';
+
+$backtrace = debug_backtrace();
+if (defined("MADELINE_REAL_ROOT")) {
+    @chdir(MADELINE_REAL_ROOT);
+}
+require_once "vendor-72/autoload.php"; 
+//require_once 'madeline.php';
 
 //if (!file_exists('madeline.php')) {
 //    copy('https://phar.madelineproto.xyz/madeline.php', 'madeline.php');
