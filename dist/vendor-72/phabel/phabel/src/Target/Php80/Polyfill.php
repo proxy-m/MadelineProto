@@ -1,0 +1,725 @@
+<?php
+
+namespace Phabel\Target\Php80;
+
+use Phabel\Plugin;
+use Phabel\Target\Polyfill as TargetPolyfill;
+use Phabel\Tools;
+if (!\defined('CAL_EASTER_DEFAULT')) {
+    \define('CAL_EASTER_DEFAULT', 0);
+}
+/**
+ * @author Daniil Gentili <daniil@daniil.it>
+ * @license MIT
+ */
+class Polyfill extends Plugin
+{
+    // Todo: nullability of a bunch of mb_ functions
+    /**
+     *
+     */
+    public static function easter_date(?int $year = NULL, int $mode = \CAL_EASTER_DEFAULT) : int
+    {
+        $year = $year ?? (int) \date('Y');
+        return \easter_date($year, $mode);
+    }
+    /**
+     *
+     */
+    public static function easter_days(?int $year = NULL, int $mode = \CAL_EASTER_DEFAULT) : int
+    {
+        $year = $year ?? (int) \date('Y');
+        return \easter_days($year, $mode);
+    }
+    /**
+     * @return (bool | int)
+     */
+    public static function unixtojd(?int $timestamp = NULL)
+    {
+        $timestamp = $timestamp ?? \time();
+        $phabelReturn = \unixtojd($timestamp);
+        if (!(\is_bool($phabelReturn) || \is_int($phabelReturn))) {
+            if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|int, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (int) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | int | float | string)
+     */
+    public static function date_sunrise(int $timestamp, int $returnFormat = \SUNFUNCS_RET_STRING, ?float $latitude = NULL, ?float $longitude = NULL, ?float $zenith = NULL, ?float $utcOffset = NULL)
+    {
+        $latitude = $latitude ?? Tools::ini_get('date.default_latitude');
+        $longitude = $longitude ?? Tools::ini_get('date.default_longitude');
+        $zenith = $zenith ?? Tools::ini_get('date.sunrise_zenith');
+        $utcOffset = $utcOffset ?? 0;
+        $phabelReturn = \date_sunrise($timestamp, $returnFormat, $latitude, $longitude, $zenith, $utcOffset);
+        if (!(\is_bool($phabelReturn) || \is_int($phabelReturn) || \is_float($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                    if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                        if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                            throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|int|float|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                        }
+                        $phabelReturn = (bool) $phabelReturn;
+                    } else {
+                        $phabelReturn = (int) $phabelReturn;
+                    }
+                } else {
+                    $phabelReturn = (float) $phabelReturn;
+                }
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | int | float | string)
+     */
+    public static function date_sunset(int $timestamp, int $returnFormat = \SUNFUNCS_RET_STRING, ?float $latitude = NULL, ?float $longitude = NULL, ?float $zenith = NULL, ?float $utcOffset = NULL)
+    {
+        $latitude = $latitude ?? Tools::ini_get('date.default_latitude');
+        $longitude = $longitude ?? Tools::ini_get('date.default_longitude');
+        $zenith = $zenith ?? Tools::ini_get('date.sunset_zenith');
+        $utcOffset = $utcOffset ?? 0;
+        $phabelReturn = \date_sunset($timestamp, $returnFormat, $latitude, $longitude, $zenith, $utcOffset);
+        if (!(\is_bool($phabelReturn) || \is_int($phabelReturn) || \is_float($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                    if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                        if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                            throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|int|float|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                        }
+                        $phabelReturn = (bool) $phabelReturn;
+                    } else {
+                        $phabelReturn = (int) $phabelReturn;
+                    }
+                } else {
+                    $phabelReturn = (float) $phabelReturn;
+                }
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     *
+     */
+    public static function date(string $format, ?int $timestamp = NULL) : string
+    {
+        return \date($format, $timestamp ?? \time());
+    }
+    /**
+     *
+     */
+    public static function getdate(?int $timestamp = NULL) : array
+    {
+        return \getdate($timestamp ?? \time());
+    }
+    /**
+     *
+     */
+    public static function gmdate(string $format, ?int $timestamp = NULL) : string
+    {
+        return \gmdate($format, $timestamp ?? \time());
+    }
+    /**
+     * @return (bool | string)
+     */
+    public static function gmstrftime(string $format, ?int $timestamp = NULL)
+    {
+        $phabelReturn = \gmstrftime($format, $timestamp ?? \time());
+        if (!(\is_bool($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | int)
+     */
+    public static function idate(string $format, ?int $timestamp = NULL)
+    {
+        $phabelReturn = \idate($format, $timestamp ?? \time());
+        if (!(\is_bool($phabelReturn) || \is_int($phabelReturn))) {
+            if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|int, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (int) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     *
+     */
+    public static function localtime(?int $timestamp = NULL, bool $associative = false) : array
+    {
+        return \localtime($timestamp ?? \time(), $associative);
+    }
+    /**
+     * @return (bool | string)
+     */
+    public static function strftime(string $format, ?int $timestamp = NULL)
+    {
+        $phabelReturn = \strftime($format, $timestamp ?? \time());
+        if (!(\is_bool($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | int)
+     */
+    public static function strtotime(string $datetime, ?int $baseTimestamp = NULL)
+    {
+        $phabelReturn = \strtotime($datetime, $baseTimestamp ?? \time());
+        if (!(\is_bool($phabelReturn) || \is_int($phabelReturn))) {
+            if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|int, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (int) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     *
+     */
+    public static function error_reporting(?int $error_level = NULL) : int
+    {
+        return $error_level === null ? \error_reporting() : \error_reporting($error_level);
+    }
+    /**
+     *
+     */
+    public static function hash_update_file($context, string $filename, $stream_context = NULL) : bool
+    {
+        return $stream_context ? \hash_update_file($context, $filename, $stream_context) : \hash_update_file($context, $filename);
+    }
+    /**
+     * @return (array | false)
+     */
+    public static function iconv_mime_decode_headers(string $headers, int $mode = 0, ?string $encoding = NULL)
+    {
+        $phabelReturn = \iconv_mime_decode_headers($headers, $mode, $encoding ?? \iconv_get_encoding('internal_encoding'));
+        if (!(\is_array($phabelReturn) || $phabelReturn === \false)) {
+            throw new \TypeError(__METHOD__ . '(): Return value must be of type false|array, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | string)
+     */
+    public static function iconv_mime_decode(string $string, int $mode = 0, ?string $encoding = NULL)
+    {
+        $phabelReturn = \iconv_mime_decode($string, $mode, $encoding ?? \iconv_get_encoding('internal_encoding'));
+        if (!(\is_bool($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | int)
+     */
+    public static function iconv_strlen(string $string, ?string $encoding = NULL)
+    {
+        $phabelReturn = \iconv_strlen($string, $encoding ?? \iconv_get_encoding('internal_encoding'));
+        if (!(\is_bool($phabelReturn) || \is_int($phabelReturn))) {
+            if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|int, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (int) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | int)
+     */
+    public static function iconv_strpos(string $haystack, string $needle, int $offset = 0, ?string $encoding = NULL)
+    {
+        $phabelReturn = \iconv_strpos($haystack, $needle, $offset, $encoding ?? \iconv_get_encoding('internal_encoding'));
+        if (!(\is_bool($phabelReturn) || \is_int($phabelReturn))) {
+            if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|int, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (int) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | int)
+     */
+    public static function iconv_strrpos(string $haystack, string $needle, ?string $encoding = NULL)
+    {
+        $phabelReturn = \iconv_strrpos($haystack, $needle, $encoding ?? \iconv_get_encoding('internal_encoding'));
+        if (!(\is_bool($phabelReturn) || \is_int($phabelReturn))) {
+            if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|int, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (int) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | string)
+     */
+    public static function iconv_substr(string $string, int $offset, ?int $length = NULL, ?string $encoding = NULL)
+    {
+        $phabelReturn = \iconv_substr($string, $offset, $length, $encoding ?? \iconv_get_encoding('internal_encoding'));
+        if (!(\is_bool($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     *
+     */
+    public static function get_resources(?string $type = NULL) : array
+    {
+        return $type === null ? \get_resources() : \get_resources($type);
+    }
+    /**
+     * @return (bool | string)
+     */
+    public static function mhash(int $algo, string $data, ?string $key = NULL)
+    {
+        $phabelReturn = $key === null ? \mhash($algo, $data) : \mhash($algo, $data);
+        if (!(\is_bool($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     *
+     */
+    public static function ignore_user_abort(?bool $enable = NULL) : int
+    {
+        return $enable === null ? \ignore_user_abort() : \ignore_user_abort($enable);
+    }
+    /**
+     *
+     */
+    public static function fsockopen(string $hostname, int $port = -1, int &$error_code = NULL, string &$error_message = NULL, ?float $timeout = NULL)
+    {
+        return $timeout === null ? \fsockopen($hostname, $port, $error_code, $error_message) : \fsockopen($hostname, $port, $error_code, $error_message);
+    }
+    /**
+     *
+     */
+    public static function ob_implicit_flush(bool $flag = true) : void
+    {
+        \ob_implicit_flush((int) $flag);
+    }
+    /**
+     * @param (int | string | null) $algo
+     */
+    public static function password_hash(string $password, $algo, array $options = array()) : string
+    {
+        if (!(\is_int($algo) || \is_string($algo) || \is_null($algo))) {
+            if (!(\is_string($algo) || \is_object($algo) && \method_exists($algo, '__toString') || (\is_bool($algo) || \is_numeric($algo)))) {
+                if (!(\is_bool($algo) || \is_numeric($algo))) {
+                    throw new \TypeError(__METHOD__ . '(): Argument #2 ($algo) must be of type int|string|null, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($algo) . ' given, called in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $algo = (int) $algo;
+            } else {
+                $algo = (string) $algo;
+            }
+        }
+        return \password_hash($password, $algo ?? \PASSWORD_DEFAULT, $options);
+    }
+    /**
+     *
+     */
+    public static function pcntl_async_signals(?bool $enable = NULL) : bool
+    {
+        return $enable === null ? \pcntl_async_signals() : \pcntl_async_signals($enable);
+    }
+    /**
+     * @return (bool | int)
+     */
+    public static function pcntl_getpriority(?int $process_id = NULL, int $mode = \PRIO_PROCESS)
+    {
+        $phabelReturn = \pcntl_getpriority($process_id ?? \getmypid(), $mode);
+        if (!(\is_bool($phabelReturn) || \is_int($phabelReturn))) {
+            if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|int, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (int) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     *
+     */
+    public static function pcntl_setpriority(int $priority, ?int $process_id = NULL, int $mode = \PRIO_PROCESS) : bool
+    {
+        return \pcntl_setpriority($priority, $process_id ?? \getmypid(), $mode);
+    }
+    /**
+     * @param (bool | int | string | null) $value
+     */
+    public static function readline_info(?string $var_name = NULL, $value = NULL)
+    {
+        if (!(\is_bool($value) || \is_int($value) || \is_string($value) || \is_null($value) || \is_null($value))) {
+            if (!(\is_string($value) || \is_object($value) && \method_exists($value, '__toString') || (\is_bool($value) || \is_numeric($value)))) {
+                if (!(\is_bool($value) || \is_numeric($value))) {
+                    if (!(\is_bool($value) || \is_numeric($value) || \is_string($value))) {
+                        throw new \TypeError(__METHOD__ . '(): Argument #2 ($value) must be of type ?bool|int|string|null, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($value) . ' given, called in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                    }
+                    $value = (bool) $value;
+                } else {
+                    $value = (int) $value;
+                }
+            } else {
+                $value = (string) $value;
+            }
+        }
+        return $var_name === null && $value === null ? \readline_info() : \readline_info($var_name, $value);
+    }
+    /**
+     *
+     */
+    public static function readline_read_history(?string $filename = NULL) : bool
+    {
+        return $filename === null ? \readline_read_history() : \readline_read_history($filename);
+    }
+    /**
+     *
+     */
+    public static function readline_write_history(?string $filename = NULL) : bool
+    {
+        return $filename === null ? \readline_read_history() : \readline_write_history($filename);
+    }
+    /**
+     * @return (bool | int)
+     */
+    public static function session_cache_expire(?int $value = NULL)
+    {
+        $phabelReturn = $value === null ? \session_cache_expire() : \session_cache_expire($value);
+        if (!(\is_bool($phabelReturn) || \is_int($phabelReturn))) {
+            if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|int, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (int) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | string)
+     */
+    public static function session_cache_limiter(?string $value = NULL)
+    {
+        $phabelReturn = $value === null ? \session_cache_limiter() : \session_cache_limiter($value);
+        if (!(\is_bool($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | string)
+     */
+    public static function session_id(?string $id = NULL)
+    {
+        $phabelReturn = $id === null ? \session_id() : \session_id($id);
+        if (!(\is_bool($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | string)
+     */
+    public static function session_module_name(?string $module = NULL)
+    {
+        $phabelReturn = $module === null ? \session_module_name() : \session_module_name($module);
+        if (!(\is_bool($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | string)
+     */
+    public static function session_name(?string $name = NULL)
+    {
+        $phabelReturn = $name === null ? \session_name() : \session_name($name);
+        if (!(\is_bool($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @return (bool | string)
+     */
+    public static function session_save_path(?string $path = NULL)
+    {
+        $phabelReturn = $path === null ? \session_save_path() : \session_save_path($path);
+        if (!(\is_bool($phabelReturn) || \is_string($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn) || \is_string($phabelReturn))) {
+                    throw new \TypeError(__METHOD__ . '(): Return value must be of type bool|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+                }
+                $phabelReturn = (bool) $phabelReturn;
+            } else {
+                $phabelReturn = (string) $phabelReturn;
+            }
+        }
+        return $phabelReturn;
+    }
+    /**
+     * @param (int | array) $lifetime_or_options
+     */
+    public static function session_set_cookie_params($lifetime_or_options, ?string $path = NULL, ?string $domain = NULL, ?bool $secure = NULL, ?bool $httponly = NULL) : bool
+    {
+        if (!(\is_int($lifetime_or_options) || \is_array($lifetime_or_options))) {
+            if (!(\is_bool($lifetime_or_options) || \is_numeric($lifetime_or_options))) {
+                throw new \TypeError(__METHOD__ . '(): Argument #1 ($lifetime_or_options) must be of type int|array, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($lifetime_or_options) . ' given, called in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+            }
+            $lifetime_or_options = (int) $lifetime_or_options;
+        }
+        return \is_array($lifetime_or_options) ? \session_set_cookie_params($lifetime_or_options) : \session_set_cookie_params(\Phabel\Target\Php74\Polyfill::array_filter(['lifetime' => $lifetime_or_options, 'path' => $path, 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly]));
+    }
+    /**
+     *
+     */
+    public static function spl_autoload_extensions(?string $file_extensions = NULL) : string
+    {
+        return $file_extensions === null ? \spl_autoload_extensions() : \spl_autoload_extensions($file_extensions);
+    }
+    /**
+     *
+     */
+    public static function spl_autoload_register(?callable $callback = NULL, bool $throw = true, bool $prepend = false) : bool
+    {
+        return \spl_autoload_register($callback ?? 'spl_autoload', $throw, $prepend);
+    }
+    /**
+     *
+     */
+    public static function spl_autoload(string $class, ?string $file_extensions = NULL) : void
+    {
+        $file_extensions === null ? \spl_autoload($class) : \spl_autoload($class, $file_extensions);
+    }
+    /**
+     *
+     */
+    public static function html_entity_decode(string $string, int $flags = \ENT_COMPAT, ?string $encoding = NULL) : string
+    {
+        return \html_entity_decode($string, $flags, $encoding ?? Tools::ini_get('default_charset'));
+    }
+    /**
+     *
+     */
+    public static function htmlentities(string $string, int $flags = \ENT_COMPAT, ?string $encoding = NULL, bool $double_encode = true) : string
+    {
+        return \htmlentities($string, $flags, $encoding ?? Tools::ini_get('default_charset'), $double_encode);
+    }
+    /**
+     * @return (array | int)
+     */
+    public static function str_word_count(string $string, int $format = 0, ?string $characters = NULL)
+    {
+        $phabelReturn = $format === null ? \str_word_count($string, $format) : \str_word_count($string, $format, $characters);
+        if (!(\is_array($phabelReturn) || \is_int($phabelReturn))) {
+            if (!(\is_bool($phabelReturn) || \is_numeric($phabelReturn))) {
+                throw new \TypeError(__METHOD__ . '(): Return value must be of type array|int, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+            }
+            $phabelReturn = (int) $phabelReturn;
+        }
+        return $phabelReturn;
+    }
+    /**
+     *
+     */
+    public static function strcspn(string $string, string $characters, int $offset = 0, ?int $length = NULL) : int
+    {
+        return $length === null ? \strcspn($string, $characters, $offset) : \strcspn($string, $characters, $offset, $length);
+    }
+    /**
+     * @param (array | string | null) $allowed_tags
+     */
+    public static function strip_tags(string $string, $allowed_tags = NULL) : string
+    {
+        if (!(\is_array($allowed_tags) || \is_string($allowed_tags) || \is_null($allowed_tags) || \is_null($allowed_tags))) {
+            if (!(\is_string($allowed_tags) || \is_object($allowed_tags) && \method_exists($allowed_tags, '__toString') || (\is_bool($allowed_tags) || \is_numeric($allowed_tags)))) {
+                throw new \TypeError(__METHOD__ . '(): Argument #2 ($allowed_tags) must be of type ?array|string|null, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($allowed_tags) . ' given, called in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+            }
+            $allowed_tags = (string) $allowed_tags;
+        }
+        return $allowed_tags === null ? \strip_tags($string) : \strip_tags($string, $allowed_tags);
+    }
+    /**
+     *
+     */
+    public static function strspn(string $string, string $characters, int $offset = 0, ?int $length = NULL) : int
+    {
+        return $length === null ? \strspn($string, $characters, $offset) : \strspn($string, $characters, $offset, $length);
+    }
+    /**
+     *
+     */
+    public static function substr_compare(string $haystack, string $needle, int $offset, ?int $length = NULL, bool $case_insensitive = false) : int
+    {
+        return \substr_compare($haystack, $needle, $offset, $length ?? \max(\strlen($needle), \strlen($haystack) - ($offset < 0 ? \strlen($haystack) + $offset : $offset)), $case_insensitive);
+    }
+    /**
+     *
+     */
+    public static function substr_count(string $haystack, string $needle, int $offset = 0, ?int $length = NULL) : int
+    {
+        return $length === null ? \substr_count($haystack, $needle, $offset) : \substr_count($haystack, $needle, $offset, $length);
+    }
+    /**
+     * @param (array | string) $string
+     * @param (array | string) $replace
+     * @param (array | int) $offset
+     * @param (array | int | null) $length
+     * @return (string | array)
+     */
+    public static function substr_replace($string, $replace, $offset, $length = NULL)
+    {
+        if (!(\is_array($string) || \is_string($string))) {
+            if (!(\is_string($string) || \is_object($string) && \method_exists($string, '__toString') || (\is_bool($string) || \is_numeric($string)))) {
+                throw new \TypeError(__METHOD__ . '(): Argument #1 ($string) must be of type array|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($string) . ' given, called in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+            }
+            $string = (string) $string;
+        }
+        if (!(\is_array($replace) || \is_string($replace))) {
+            if (!(\is_string($replace) || \is_object($replace) && \method_exists($replace, '__toString') || (\is_bool($replace) || \is_numeric($replace)))) {
+                throw new \TypeError(__METHOD__ . '(): Argument #2 ($replace) must be of type array|string, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($replace) . ' given, called in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+            }
+            $replace = (string) $replace;
+        }
+        if (!(\is_array($offset) || \is_int($offset))) {
+            if (!(\is_bool($offset) || \is_numeric($offset))) {
+                throw new \TypeError(__METHOD__ . '(): Argument #3 ($offset) must be of type array|int, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($offset) . ' given, called in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+            }
+            $offset = (int) $offset;
+        }
+        if (!(\is_array($length) || \is_int($length) || \is_null($length) || \is_null($length))) {
+            if (!(\is_bool($length) || \is_numeric($length))) {
+                throw new \TypeError(__METHOD__ . '(): Argument #4 ($length) must be of type ?array|int|null, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($length) . ' given, called in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+            }
+            $length = (int) $length;
+        }
+        $phabelReturn = $length === null ? \substr_replace($string, $replace, $offset) : \substr_replace($string, $replace, $offset, $length);
+        if (!(\is_string($phabelReturn) || \is_array($phabelReturn))) {
+            if (!(\is_string($phabelReturn) || \is_object($phabelReturn) && \method_exists($phabelReturn, '__toString') || (\is_bool($phabelReturn) || \is_numeric($phabelReturn)))) {
+                throw new \TypeError(__METHOD__ . '(): Return value must be of type string|array, ' . \Phabel\Plugin\TypeHintReplacer::getDebugType($phabelReturn) . ' returned in ' . \Phabel\Plugin\TypeHintReplacer::trace());
+            }
+            $phabelReturn = (string) $phabelReturn;
+        }
+        return $phabelReturn;
+    }
+    /**
+     *
+     */
+    public static function substr(string $string, int $offset, ?int $length = NULL) : string
+    {
+        return $length === null ? \substr($string, $offset) : \substr($string, $offset, $length);
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public static function withNext(array $config) : array
+    {
+        return [TargetPolyfill::class => [self::class => \true]];
+    }
+}

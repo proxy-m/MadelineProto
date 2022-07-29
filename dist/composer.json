@@ -1,0 +1,24 @@
+{
+    "name": "danog/madelineprotophar",
+    "require": {
+        "danog/madelineproto": "7.0.113.9998"
+    },
+    "authors": [
+        {
+            "name": "Daniil Gentili",
+            "email": "daniil@daniil.it"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/woodpecker/src/gitea.daniil.it/danog/MadelineProto",
+            "options": {"symlink": false}
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "phabel/phabel": true
+        }
+    }
+}
